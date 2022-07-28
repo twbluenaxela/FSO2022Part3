@@ -1,0 +1,1 @@
+GET https://3001-twbluenaxel-fso2022part-rlkoupq6edq.ws-us54.gitpod.io/api/notes

@@ -1,0 +1,27 @@
+{
+  "name": "fso2022part3",
+  "version": "1.0.0",
+  "description": "This is where I do exercises that explore the backend using Node.js, Express, and MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twbluenaxela/FSO2022Part3.git"
+  },
+  "author": "于乐洋 Nick Urrutia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/twbluenaxela/FSO2022Part3/issues"
+  },
+  "homepage": "https://github.com/twbluenaxela/FSO2022Part3#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
