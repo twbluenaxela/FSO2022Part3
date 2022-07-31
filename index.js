@@ -2,6 +2,8 @@ const http = require("http");
 const cors = require('cors')
 const express = require("express");
 const app = express();
+const mongoose = require('mongoose')
+
 
 let notes = [
   {
@@ -24,6 +26,30 @@ let notes = [
   },
 ];
 
+const password = process.argv.slice(2)
+const databaseName = 'noteApp'
+
+const url =
+`mongodb+srv://admin:${password}@cluster0.yjj12od.mongodb.net/${databaseName}?retryWrites=true&w=majority`
+
+mongoose.connect(url)
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  date: Date,
+  important: Boolean
+})
+
+noteSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject._v
+  }
+})
+
+const Note = mongoose.model('Note', noteSchema)
+
 app.use(express.json())
 app.use(cors())
 
@@ -35,7 +61,9 @@ app.get("/", (request, response) => {
 });
 
 app.get('/api/notes', (request, response) => {
-  response.json(notes)
+  Note.find({}).then(notes => {
+    response.json(notes)
+  })
 })
 
 app.get("/api/notes/:id", (request, response) => {
