@@ -1,9 +1,10 @@
+require('dotenv').config()
 const http = require("http");
 const cors = require('cors')
 const express = require("express");
 const app = express();
 const mongoose = require('mongoose')
-
+const Note = require('./models/note')
 
 let notes = [
   {
@@ -26,30 +27,6 @@ let notes = [
   },
 ];
 
-const password = process.argv.slice(2)
-const databaseName = 'noteApp'
-
-const url =
-`mongodb+srv://admin:${password}@cluster0.yjj12od.mongodb.net/${databaseName}?retryWrites=true&w=majority`
-
-mongoose.connect(url)
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean
-})
-
-noteSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject._v
-  }
-})
-
-const Note = mongoose.model('Note', noteSchema)
-
 app.use(express.json())
 app.use(cors())
 
@@ -67,13 +44,9 @@ app.get('/api/notes', (request, response) => {
 })
 
 app.get("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const note = notes.find((note) => note.id === id);
-  if (note) {
-    response.json(note);
-  }else{
-    response.status(404).end()
-  }
+  Note.findById(request.params.id).then(note => {
+    response.json(note)
+  })
 });
 //change to trigger github
 const generateId = () => {
@@ -91,17 +64,15 @@ app.post('/api/notes', (request, response) => {
     })
   }
 
-  const note = {
+  const note = new Note ({
     content: body.content,
     important: body.important || false,
-    date: new Date(),
-    id: generateId(),
-  }
+    date: new Date()
+  })
 
-  notes = notes.concat(note)
-  // console.log(note);
-  response.json(note)
-
+  note.save().then(savedNote => {
+    response.json(savedNote)
+  })
 })
 
 app.delete('/api/notes/:id', (request, response) => {
@@ -110,7 +81,7 @@ app.delete('/api/notes/:id', (request, response) => {
   response.status(204).end()
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 
 app.listen(PORT);
 console.log(`Serving running on ${PORT}`);
