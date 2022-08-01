@@ -1,7 +1,7 @@
-POST https://3001-twbluenaxel-fso2022part-rlkoupq6edq.ws-us54.gitpod.io/api/notes
+POST https://3001-twbluenaxel-fso2022part-31sz820rhga.ws-us58.gitpod.io/api/notes
 Content-Type: application/json
 
 {
-    "content": "VS CODE IS AMAZING",
-    "important": false
+    "content": "Fullstack is the way to go!",
+    "important": true
 }

@@ -1,0 +1,7 @@
+PUT https://3001-twbluenaxel-fso2022part-31sz820rhga.ws-us58.gitpod.io/api/notes/62e844fd584cc0fc12b898bd
+Content-Type: application/json
+
+{
+    "content": "VSCode is amazing!",
+    "important": false
+}
