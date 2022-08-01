@@ -40,20 +40,20 @@ app.get("/api/notes/:id", (request, response, next) => {
   .catch(error => next(error))
 });
 //change to trigger github
-const generateId = () => {
-  const maxId = notes.length > 0 
-  ? Math.max(...notes.map(n => n.id))
-  : 0
-  return maxId + 1
-}
+// const generateId = () => {
+//   const maxId = notes.length > 0 
+//   ? Math.max(...notes.map(n => n.id))
+//   : 0
+//   return maxId + 1
+// }
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
-  if(!body.content) {
-    return response.status(400).json({
-      error: 'content missing'
-    })
-  }
+  // if(!body.content) {
+  //   return response.status(400).json({
+  //     error: 'content missing'
+  //   })
+  // }
 
   const note = new Note ({
     content: body.content,
@@ -64,16 +64,21 @@ app.post('/api/notes', (request, response) => {
   note.save().then(savedNote => {
     response.json(savedNote)
   })
+  .catch(error => next(error))
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
-  const body = request.body
-  const note = {
-    content: body.content,
-    important: body.important
-  }
+  // const body = request.body
+  const {content, important} = request.body
+  // const note = {
+  //   content: body.content,
+  //   important: body.important
+  // }
 
-  Note.findByIdAndUpdate(request.params.id, note, {new: true})
+  Note.findByIdAndUpdate(
+    request.params.id, 
+    {content, important}, 
+    {new: true, runValidators:true, context:'query'})
   .then(updatedNote => {
     response.json(updatedNote)
   })
@@ -97,9 +102,11 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-  console.log(error.message);
-  if(error.name === 'Cast Error') {
-    return response.status(400).send({error: 'malformatted id'})
+  console.log("Error", error.message);
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
   next(error)
 }
