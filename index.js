@@ -1,10 +1,7 @@
 require('dotenv').config()
-const http = require("http");
-const cors = require('cors')
-const express = require("express");
-const app = express();
-const mongoose = require('mongoose')
-const Note = require('./models/note');
+const express = require('express')
+const app = express()
+const Note = require('./models/note')
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
@@ -15,13 +12,12 @@ const requestLogger = (request, response, next) => {
 }
 
 app.use(express.json())
-app.use(cors())
 app.use(express.static('build'))
 app.use(requestLogger)
 
-app.get("/", (request, response) => {
-  response.send("<h1>Hello World</h1>");
-});
+app.get('/', (request, response) => {
+  response.send('<h1>Hello World</h1>')
+})
 
 app.get('/api/notes', (request, response) => {
   Note.find({}).then(notes => {
@@ -29,7 +25,7 @@ app.get('/api/notes', (request, response) => {
   })
 })
 
-app.get("/api/notes/:id", (request, response, next) => {
+app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id).then(note => {
     if(note){
       response.json(note)
@@ -37,23 +33,11 @@ app.get("/api/notes/:id", (request, response, next) => {
       response.status(400).end()
     }
   })
-  .catch(error => next(error))
-});
-//change to trigger github
-// const generateId = () => {
-//   const maxId = notes.length > 0 
-//   ? Math.max(...notes.map(n => n.id))
-//   : 0
-//   return maxId + 1
-// }
+    .catch(error => next(error))
+})
 
 app.post('/api/notes', (request, response, next) => {
   const body = request.body
-  // if(!body.content) {
-  //   return response.status(400).json({
-  //     error: 'content missing'
-  //   })
-  // }
 
   const note = new Note ({
     content: body.content,
@@ -64,45 +48,45 @@ app.post('/api/notes', (request, response, next) => {
   note.save().then(savedNote => {
     response.json(savedNote)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
   // const body = request.body
-  const {content, important} = request.body
+  const { content, important } = request.body
   // const note = {
   //   content: body.content,
   //   important: body.important
   // }
 
   Note.findByIdAndUpdate(
-    request.params.id, 
-    {content, important}, 
-    {new: true, runValidators:true, context:'query'})
-  .then(updatedNote => {
-    response.json(updatedNote)
-  })
-  .catch(error => next(error))
+    request.params.id,
+    { content, important },
+    { new: true, runValidators:true, context:'query' })
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
 
 })
 
 
 app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndRemove(request.params.id)
-  .then(result => {
-    response.status(204).end()
-  })
-  .catch(error => next(error))
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({error: 'unknown endpoint'})
+  response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-  console.log("Error", error.message);
+  console.log('Error', error.message)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
@@ -114,7 +98,8 @@ const errorHandler = (error, request, response, next) => {
 app.use(errorHandler)
 
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 
-app.listen(PORT);
-console.log(`Serving running on ${PORT}`);
+app.listen(PORT)
+console.log(`Serving running on ${PORT}`)
