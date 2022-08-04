@@ -4,7 +4,7 @@
   "description": "This is where I do exercises that explore the backend using Node.js, Express, and MongoDB",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build:ui": "rm -rf build && cd ../FSO2022Part2/notes && npm run build && cp -r build ../../FSO2022Part3",
@@ -31,6 +31,10 @@
   },
   "devDependencies": {
     "eslint": "^8.21.0",
+    "jest": "^28.1.3",
     "nodemon": "^2.0.19"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
