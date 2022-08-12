@@ -1,7 +1,8 @@
-POST https://3001-twbluenaxel-fso2022part-31sz820rhga.ws-us54.gitpod.io/api/notes
+POST http://localhost:3003/api/notes
 Content-Type: application/json
 
 {
-    "content": "lol",
-    "important": true
+    "content": "Javascript BEAST",
+    "important": true,
+    "userId": "62f5ce3093c784744ee860dd"
 }
