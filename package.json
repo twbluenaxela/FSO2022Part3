@@ -4,15 +4,15 @@
   "description": "This is where I do exercises that explore the backend using Node.js, Express, and MongoDB",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit ",
+    "test": "cross-env NODE_ENV=testing jest --verbose --runInBand --forceExit ",
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "dev:test": "NODE_ENV=testing node index.js",
     "build:ui": "rm -rf build && cd ../FSO2022Part2/notes && npm run build && cp -r build ../../FSO2022Part3",
     "deploy": "git push heroku main",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
-    "lint": "eslint .",
-    "start:test": "cross-env NODE_ENV=test node index.js"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
